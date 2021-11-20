@@ -85,6 +85,18 @@ export default function MissionFeed() {
     console.log("Error occured!", error)
   }
 
+  const metas = Array.from(document.getElementsByTagName("meta"))
+  const metaData: FeedItem = missions[missions.length - 1] 
+  if(metaData) {
+    metas.find(meta => meta.getAttribute('property') === 'og:title')?.setAttribute("content", metaData?.title || "")
+    metas.find(meta => meta.getAttribute('property') === 'og:description')?.setAttribute("content", metaData?.title || "")
+    metas.find(meta => meta.getAttribute('property') === 'og:image')?.setAttribute("content", "image" in metaData ? metaData.image.src : "")
+    metas.find(meta => meta.getAttribute('name') === 'twitter:title')?.setAttribute("content", metaData?.title || "")
+    metas.find(meta => meta.getAttribute('name') === 'twitter:description')?.setAttribute("content", metaData?.title || "")
+    metas.find(meta => meta.getAttribute('name') === 'twitter:image')?.setAttribute("content", "image" in metaData ? metaData.image.src : "")
+  }
+  
+
   return (
     <div className="min-h-screen py-6 flex flex-col justify-start sm:py-12">
       <LanguageSelector currentLang={currentLang} setCurrentLang={setCurrentLang} />
