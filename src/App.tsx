@@ -1,4 +1,3 @@
-import React from 'react';
 import MissionFeed from './components/MissionFeed';
 
 function App() {

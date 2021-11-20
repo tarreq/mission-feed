@@ -2,9 +2,10 @@ import { FeedItem as FeedItemType } from './Types'
 
 type FeedItemProps = {
   mission: FeedItemType
+  itemRef: any
 }
 
-const FeedItem = ({mission}: FeedItemProps) => {
+const FeedItem = ({mission, itemRef}: FeedItemProps) => {
     return (
         <div className="relative bg-gray-100 shadow-md rounded-lg mb-8 flex flex-col h-80 font-roboto">
           <div className="h-4/6 bg-cover" style={"image" in mission ? {backgroundImage: `url(${mission.image.src})`} : undefined}>
@@ -25,7 +26,7 @@ const FeedItem = ({mission}: FeedItemProps) => {
             <div className="text-xl mx-2 my-1">
               {mission.title}
             </div>
-            <div className="text-lg mx-2 my-1 flex justify-center bg-white rounded-md p-2 mb-2">
+            <div ref={itemRef || undefined} className="text-lg mx-2 my-1 flex justify-center bg-white rounded-md p-2 mb-2">
               <img className="mr-1" src="/icons/gift.svg" alt="icon" />
               <span className="mr-1 text-sm font-semibold">Reward</span>
               <span className="text-sm">$ {mission.cashReward}</span>

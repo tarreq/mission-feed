@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { FeedItem } from './Types'
 
 import FeedDay from "./FeedDay"
@@ -14,6 +14,17 @@ export default function MissionFeed() {
   const [offset, setOffset] = useState<number>(0)
   const [hasNext, setHasNext] = useState<boolean>(true)
   const [dates, setDates] = useState<string[]>([])
+
+  const observer = useRef<IntersectionObserver>()
+  const lastMissionElementRef= useCallback(node => {
+    if(observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if(entries[0].isIntersecting) {
+        fetchNext()
+      }
+    })
+    if(node) observer.current.observe(node)
+  },[missions])
 
   const getMissions = gql`
   query {
@@ -64,21 +75,22 @@ export default function MissionFeed() {
     setOffset(missions?.length)
   }
 
+  if(error) {
+    console.log("Error occured!", error)
+  }
+
   return (
     <div className="min-h-screen py-6 flex flex-col justify-start sm:py-12">
       {dates.map((day, index) => {
         const dayMissions = missions.filter(mission => new Date(mission.date)
           .toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }) === day)
-        return <FeedDay key={index} date={day} missions={dayMissions} />
+        return <FeedDay key={index} date={day} missions={dayMissions} lastElementRef={lastMissionElementRef}/>
       })}
       { loading && 
       <div className="flex justify-center">
         <img style={{width: "35px", height: "35px"}} src="/images/spinner.gif" alt="spinner" />
       </div>
       }
-      <button onClick={fetchNext}>
-        Get next
-      </button>
     </div>
   )
 }
