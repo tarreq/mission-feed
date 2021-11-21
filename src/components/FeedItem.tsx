@@ -18,8 +18,8 @@ const FeedItem = ({mission, itemRef}: FeedItemProps) => {
             </div>
             {"video" in mission && 
               <div className="relative z-10">
-                <video controls className="object-cover h-52 w-full">
-                  <source src={mission.video.src} type="video/mp4" />
+                <video controls preload="metadata" className="object-cover h-52 w-full">
+                  <source src={`${mission.video.src}#t=0.05`} type="video/mp4" />
                 </video>
               </div>
             }
